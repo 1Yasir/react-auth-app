@@ -21,17 +21,17 @@ function LoginForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const token = localStorage.getItem("token");
 
         try {
-
             const res = await fetch("http://localhost:8009/login", {
                 method: "POST",
                 body: JSON.stringify(formValues),
                 headers: {
-                    "Content-Type": "application/json"
-                }
-
-            })
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
             const data = await res.json();
 
             if (res.ok) {
@@ -40,14 +40,12 @@ function LoginForm() {
             } else {
                 console.log("Login Error:", data.error);
             }
-
         } catch (error) {
-
             console.error("Fetch error:", error);
-
         }
         // Add form submission logic here
     };
+
 
     return (
         <>
