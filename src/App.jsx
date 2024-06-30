@@ -9,9 +9,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
 function App() {
-  
 
-  // console.log("app component");
+
+  console.log("app component");
   return (
     <div className='app'>
       <Router>
@@ -20,7 +20,7 @@ function App() {
           <Route path='/' element={<Login />} />
           <Route path='/register' element={<Register />} />
           <Route path='/dashboard' element={<DashBoard />} />
-          <Route path='/*' element={<Error />} />
+          <Route path='*' element={<Error />} />
         </Routes>
       </Router>
 
