@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from '@mui/material/Button';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 function LoginForm() {
+    const navigate = useNavigate();
     const [formValues, setFormValues] = useState({
         email: '',
         password: '',
@@ -29,14 +30,14 @@ function LoginForm() {
                 body: JSON.stringify(formValues),
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
+                    // "Authorization": `Bearer ${token}`,
                 },
             });
             const data = await res.json();
 
             if (res.ok) {
-                console.log("Login successfully", data);
                 localStorage.setItem("token", data.token);
+                navigate("/dashboard");
             } else {
                 console.log("Login Error:", data.error);
             }

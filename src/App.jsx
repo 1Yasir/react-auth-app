@@ -4,13 +4,14 @@ import Header from './components/Header';
 import Login from './components/Login';
 import Register from './components/Register';
 import DashBoard from './components/DashBoard';
+import Error from './components/Error';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
 function App() {
   
 
-  console.log("app component");
+  // console.log("app component");
   return (
     <div className='app'>
       <Router>
@@ -19,6 +20,7 @@ function App() {
           <Route path='/' element={<Login />} />
           <Route path='/register' element={<Register />} />
           <Route path='/dashboard' element={<DashBoard />} />
+          <Route path='/*' element={<Error />} />
         </Routes>
       </Router>
 

@@ -4,9 +4,14 @@ import Navbar from 'react-bootstrap/Navbar';
 import { NavLink } from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
 import PersonIcon from '@mui/icons-material/Person';
+import { LoginContext } from './contextProvider/ContextProvider';
+import { useContext } from 'react';
 
 function Header() {
-    console.log("Header in component");
+
+    const { loginAuthentication } = useContext(LoginContext);
+
+    // console.log("Header in component");
 
     return (
         <Navbar expand="lg" className="shadow-sm position-sticky top-0">
@@ -18,7 +23,13 @@ function Header() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ms-auto">
                         <Nav.Link>
-                            <Avatar className='bg-primary'> <PersonIcon /></Avatar>
+
+                            <Avatar className='bg-primary'>
+                                {
+                                    loginAuthentication ? loginAuthentication.user.name[0] : <PersonIcon />
+                                }
+
+                            </Avatar>
                         </Nav.Link>
 
 
