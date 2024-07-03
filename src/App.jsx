@@ -6,6 +6,7 @@ import Register from './components/Register';
 import DashBoard from './components/DashBoard';
 import Error from './components/Error';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./index.css"
 
 
 function App() {

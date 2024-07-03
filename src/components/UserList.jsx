@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from 'react';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import { Button } from '@mui/material';
 
 function UserList() {
   const [userList, setUserList] = useState(null);
   const [gender, setGender] = useState("");
-  const [arrange, setArrange] = useState(1);
+  const [sorting, setSorting] = useState(null);
 
-  const handelInput = (e) => {
+  const handleInput = (e) => {
     setGender(e.target.value);
   };
 
-  const handelInputArrange = (e)=>{
-    const order = parseInt(e.target.value);
-    setArrange(order)
-    console.log(order);
-  }
+  const handleSorting = (name, value) => {
+    setSorting({ name, value });
+  };
 
   useEffect(() => {
     const fetchApiData = async () => {
       const token = localStorage.getItem("token");
 
       try {
-        const res = await fetch(`http://localhost:8009/users?gender=${gender}&order=${arrange}`, {
+        const res = await fetch(`http://localhost:8009/users?gender=${gender}&${sorting?.name}=${sorting?.value}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -30,7 +31,6 @@ function UserList() {
         const data = await res.json();
         setUserList(data);
 
-      console.log(data);
         if (!data) {
           throw new Error("Data not found");
         }
@@ -40,7 +40,7 @@ function UserList() {
     };
 
     fetchApiData();
-  }, [gender]); 
+  }, [gender, sorting]);
 
   return (
     <>
@@ -49,7 +49,7 @@ function UserList() {
           <input
             type="radio"
             name="gender"
-            onChange={handelInput}
+            onChange={handleInput}
             id="male"
             value="male"
           />
@@ -59,7 +59,7 @@ function UserList() {
           <input
             type="radio"
             name="gender"
-            onChange={handelInput}
+            onChange={handleInput}
             id="female"
             value="female"
           />
@@ -69,54 +69,45 @@ function UserList() {
           <input
             type="radio"
             name="gender"
-            onChange={handelInput}
+            onChange={handleInput}
             id="all"
             value=""
-            checked = {gender === ""  && true}
+            checked={gender === ""}
           />
           <label htmlFor="all">All</label>
         </div>
       </div>
-      <div>
-
-      <div>
-          <input
-            type="radio"
-            name="arrange"
-            onChange={handelInputArrange}
-            id="acceding"
-            value="1"
-          />
-          <label htmlFor="acceding">acceding</label>
-        </div>
-        <div>
-          <input
-            type="radio"
-            name="arrange"
-            onChange={handelInputArrange}
-            id="deciding"
-            value="-1"
-          />
-          <label htmlFor="deciding">deciding</label>
-        </div>
-
-      </div>
       <table>
         <thead>
           <tr>
-            <th>User Name</th>
-            <th>Gender</th>
-            <th>age</th>
-            <th>rating</th>
+            <th className='table-heading  table-name'>
+              User Name
+              <Button onClick={() => handleSorting("name", sorting?.value === 1 ? -1 : 1)} >
+                {sorting?.name === "name" && sorting?.value === 1 ? <ArrowDownwardIcon  /> : <ArrowUpwardIcon />}
+              </Button>
+            </th>
+            <th className='table-heading '>Gender</th>
+            <th className='table-heading table-age '>
+              Age
+              <Button onClick={() => handleSorting("age", sorting?.value === 1 ? -1 : 1)}>
+                {sorting?.name === "age" && sorting?.value === 1 ? <ArrowDownwardIcon /> : <ArrowUpwardIcon  />}
+              </Button>
+            </th>
+            <th className='table-heading table-rating '>
+              Rating
+              <Button onClick={() => handleSorting("rating", sorting?.value === 1 ? -1 : 1)}>
+                {sorting?.name === "rating" && sorting?.value === 1 ? <ArrowDownwardIcon /> : <ArrowUpwardIcon  />}
+              </Button>
+            </th>
           </tr>
         </thead>
         <tbody>
-          {userList?.map((list, i) => (
+          {userList?.map((user, i) => (
             <tr key={i}>
-              <td>{list.name}</td>
-              <td>{list.gender}</td>
-              <td>{list.age}</td>
-              <td>{list.rating}</td>
+              <td>{user.name}</td>
+              <td>{user.gender}</td>
+              <td>{user.age}</td>
+              <td>{user.rating}</td>
             </tr>
           ))}
         </tbody>
