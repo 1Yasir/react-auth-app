@@ -14,6 +14,9 @@ function RegisterForm() {
         email: '',
         password: '',
         confirmPassword: '',
+        gender: "",
+        rating: "",
+        age: "",
     });
     const [showPassword, setShowPassword] = useState({
         password: false,
@@ -33,6 +36,8 @@ function RegisterForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const { password, confirmPassword } = formValues;
+
+        console.log(formValues);
         if (password !== confirmPassword) {
             setAlert({ type: 'error', message: 'Passwords do not match' });
             return;
@@ -86,6 +91,31 @@ function RegisterForm() {
                         onChange={handleChange}
                     />
                 </Form.Group>
+                <Form.Group className="mb-3" controlId="formGroupAge">
+                    <Form.Label className='fw-bold'>Age</Form.Label>
+                    <Form.Control
+                        type="text"
+                        placeholder="Enter your age"
+                        required
+                        name='age'
+                        value={formValues.age}
+                        onChange={handleChange}
+                    />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="formGroupRating">
+                    <Form.Label className='fw-bold'>Rating</Form.Label>
+                    <Form.Control
+                        type="number"
+                        placeholder="Enter your rating"
+                        required
+                        value={formValues.rating}
+                        onChange={handleChange}
+                        name='rating'
+                        min={0}
+                        max={5}
+                      
+                    />
+                </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formGroupEmail">
                     <Form.Label className='fw-bold'>Email</Form.Label>
@@ -98,6 +128,32 @@ function RegisterForm() {
                         onChange={handleChange}
                     />
                 </Form.Group>
+                <div className='d-flex gap-3'>
+                    <Form.Group className="mb-3" controlId="formGroupMale">
+                        <Form.Label className='fw-bold'>Male</Form.Label>
+                        <Form.Check
+                            type="radio"
+                            name='gender'
+                            required
+                            onChange={handleChange}
+                            value="male"
+                            checked={formValues.gender === 'male'}
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formGroupFeMale">
+                        <Form.Label className='fw-bold'>FeMale</Form.Label>
+                        <Form.Check
+                            type="radio"
+                            name='gender'
+                            required
+                            onChange={handleChange}
+                            value="female"
+                            checked={formValues.gender === 'female'}
+                        />
+                    </Form.Group>
+
+                </div>
+
 
                 <Form.Group className="mb-4 position-relative" controlId="formGroupPassword">
                     <Form.Label className='fw-bold'>Password</Form.Label>

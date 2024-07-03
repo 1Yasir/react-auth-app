@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from './contextProvider/ContextProvider';
+import UserList from "./UserList";
+import Col from 'react-bootstrap/esm/Col';
 
 function DashBoard() {
     const navigate = useNavigate();
@@ -22,7 +24,7 @@ function DashBoard() {
                 });
 
                 if (!res.ok) {
-                    navigate("*");
+                    navigate("/*");
                     return;
                 }
 
@@ -44,12 +46,19 @@ function DashBoard() {
     }
 
     return (
-        <Container className='d-flex justify-content-center align-items-center h-100 py-5'>
-            <ul>
-                <li><strong>User Name:</strong> {loginAuthentication?.user?.name}</li>
-                <li><strong>User Email:</strong> {loginAuthentication?.user?.email}</li>
-            </ul>
-        </Container>
+        <>
+            <Container>
+                <Col className='d-flex justify-content-center align-items-center h-100 py-5'>
+                    <ul>
+                        <li><strong>User Name:</strong> {loginAuthentication?.user?.name}</li>
+                        <li><strong>User Email:</strong> {loginAuthentication?.user?.email}</li>
+                    </ul>
+                    {/* all User */}
+
+                </Col>
+                <UserList />
+            </Container>
+        </>
     );
 }
 
