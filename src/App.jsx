@@ -7,6 +7,7 @@ import DashBoard from './components/DashBoard';
 import Error from './components/Error';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./index.css"
+import Career from "./components/Careers/Career";
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path='/' element={<Login />} />
           <Route path='/register' element={<Register />} />
           <Route path='/dashboard' element={<DashBoard />} />
+          <Route path='/careers' element={<Career />} />
           <Route path='*' element={<Error />} />
         </Routes>
       </Router>

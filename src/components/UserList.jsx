@@ -4,24 +4,41 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { Button } from '@mui/material';
 
 function UserList() {
-  const [userList, setUserList] = useState(null);
-  const [gender, setGender] = useState("");
-  const [sorting, setSorting] = useState(null);
+  const [userList, setUserList] = useState([]);
+  const [filter, setFilter] = useState({ gender: "", ageMin: "", ageMax: "" });
+  const [sorting, setSorting] = useState({ name: "", value: "" });
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(2);
 
   const handleInput = (e) => {
-    setGender(e.target.value);
+    const { name, value } = e.target;
+    setFilter(prevState => ({ ...prevState, [name]: value }));
   };
 
-  const handleSorting = (name, value) => {
-    setSorting({ name, value });
+  const handleSorting = (name) => {
+
+    setSorting(prevState => ({
+      name,
+      value: prevState.name === name && prevState.value === 1 ? -1 : 1
+    }));
   };
+  console.log(sorting);
 
   useEffect(() => {
     const fetchApiData = async () => {
       const token = localStorage.getItem("token");
+      const query = new URLSearchParams({
+        ...filter,
+        sortField: sorting.name,
+        sortOrder: sorting.value,
+        page,
+        pageSize
+      }).toString();
+
+      console.log(query);
 
       try {
-        const res = await fetch(`http://localhost:8009/users?gender=${gender}&${sorting?.name}=${sorting?.value}`, {
+        const res = await fetch(`http://localhost:8009/users?${query}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -29,9 +46,10 @@ function UserList() {
           }
         });
         const data = await res.json();
-        setUserList(data);
+        console.log(data);
+        setUserList(data.users);
 
-        if (!data) {
+        if (!data.users) {
           throw new Error("Data not found");
         }
       } catch (error) {
@@ -40,11 +58,11 @@ function UserList() {
     };
 
     fetchApiData();
-  }, [gender, sorting]);
+  }, [filter, sorting, page, pageSize]);
 
   return (
     <>
-      <div>
+      <div className='d-flex gap-3 mb-3'>
         <div>
           <input
             type="radio"
@@ -72,33 +90,61 @@ function UserList() {
             onChange={handleInput}
             id="all"
             value=""
-            checked={gender === ""}
           />
           <label htmlFor="all">All</label>
+        </div>
+      </div>
+      <div className="filter">
+        <h2>User Filter Based on Name and Age Range</h2>
+        <div>
+          <input
+            type="text"
+            name="name"
+            onChange={handleInput}
+            id="name"
+            placeholder="Enter a name"
+          />
+          <label htmlFor="name">Name</label>
+        </div>
+        <div>
+          <input
+            type="number"
+            name="ageMin"
+            onChange={handleInput}
+            id="ageMin"
+            placeholder="Min Age"
+          />
+          <label htmlFor="ageMin">Min Age</label>
+        </div>
+        <div>
+          <input
+            type="number"
+            name="ageMax"
+            onChange={handleInput}
+            id="ageMax"
+            placeholder="Max Age"
+          />
+          <label htmlFor="ageMax">Max Age</label>
         </div>
       </div>
       <table>
         <thead>
           <tr>
-            <th className='table-heading  table-name'>
+            <th className='table-heading table-name'>
               User Name
-              <Button onClick={() => handleSorting("name", sorting?.value === 1 ? -1 : 1)} >
-                {sorting?.name === "name" && sorting?.value === 1 ? <ArrowDownwardIcon  /> : <ArrowUpwardIcon />}
+              <Button onClick={() => handleSorting("name")}>
+                {sorting.name === "name" && sorting.value === 1 ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
               </Button>
             </th>
-            <th className='table-heading '>Gender</th>
-            <th className='table-heading table-age '>
+            <th className='table-heading'>Gender</th>
+            <th className='table-heading table-age'>
               Age
-              <Button onClick={() => handleSorting("age", sorting?.value === 1 ? -1 : 1)}>
-                {sorting?.name === "age" && sorting?.value === 1 ? <ArrowDownwardIcon /> : <ArrowUpwardIcon  />}
+              <Button onClick={() => handleSorting("age")}>
+                {sorting.name === "age" && sorting.value === 1 ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
               </Button>
             </th>
-            <th className='table-heading table-rating '>
-              Rating
-              <Button onClick={() => handleSorting("rating", sorting?.value === 1 ? -1 : 1)}>
-                {sorting?.name === "rating" && sorting?.value === 1 ? <ArrowDownwardIcon /> : <ArrowUpwardIcon  />}
-              </Button>
-            </th>
+            <th className='table-heading table-rating'>Rating</th>
+            <th className='table-heading'>Email</th>
           </tr>
         </thead>
         <tbody>
@@ -108,10 +154,22 @@ function UserList() {
               <td>{user.gender}</td>
               <td>{user.age}</td>
               <td>{user.rating}</td>
+              <td>{user.email}</td>
             </tr>
           ))}
         </tbody>
       </table>
+      <div>
+        <Button onClick={() => setPage(page > 1 ? page - 1 : 1)}>Previous</Button>
+        <Button onClick={() => setPage(page + 1)}>Next</Button>
+        <select onChange={(e) => setPageSize(e.target.value)} value={pageSize}>
+          <option value={2}>2</option>
+          <option value={4}>4</option>
+          <option value={5}>5</option>
+          <option value={10}>10</option>
+          <option value={20}>20</option>
+        </select>
+      </div>
     </>
   );
 }
