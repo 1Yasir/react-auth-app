@@ -5,7 +5,7 @@ import Col from "react-bootstrap/Col";
 import FormSection from './layout/FormSection';
 import RegisterForm from './layout/RegisterForm';
 function Register() {
-    console.log("Register Component");
+    console.log("Register Component parent , formsection registerform");
     return (
         <section className='register pt-5'>
             <Container>

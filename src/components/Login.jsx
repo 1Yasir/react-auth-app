@@ -8,7 +8,7 @@ import LoginForm from './layout/LoginForm';
 
 
 function Login() {
-    console.log("log in component");
+    console.log("log in component ,,,,, parent (formsection , loginforn)");
     return (
         <section className='login pt-5'>
             <Container>
